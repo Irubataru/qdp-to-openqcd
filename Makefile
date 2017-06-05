@@ -1,8 +1,14 @@
-CXX      ?= g++
-CXXFLAGS := -std=c++11 -Iinclude -g -I$(HOME)/.usr/include -I/usr/include/libxml2
+CXX          ?= g++
+QDP_DIR      ?= $(HOME)/.usr/qdp_debug
+OPENQCD_DIR  ?= openqcd
+MPI_DIR      ?= /usr/lib/openmpi
 
-QDP_LIBFLAGS := $(shell $(HOME)/.usr/qdp_debug/bin/qdp++-config --libs)\
-								$(shell $(HOME)/.usr/qdp_debug/bin/qdp++-config --ldflags)
+CXXFLAGS     := -std=c++11 -g -Iinclude -I$(OPENQCD_DIR)/include\
+								-I$(MPI_DIR)/include\
+								$(shell $(QDP_DIR)/bin/qdp++-config --cxxflags)
+
+QDP_LIBFLAGS := $(shell $(QDP_DIR)/bin/qdp++-config --libs)\
+								$(shell $(QDP_DIR)/bin/qdp++-config --ldflags)
 
 SRCDIR := programs
 BINDIR := bin
@@ -12,8 +18,7 @@ SRCS     := $(wildcard $(SRCDIR)/*.cpp)
 EXECS    := $(SRCS:$(SRCDIR)/%.cpp=$(BINDIR)/%)
 DEPS     := $(SRCS:$(SRCDIR)/%.cpp=$(DEPDIR)/%.d)
 
-all: $(EXECS)
-
+all: $(EXECS) $(OPENQCD_DIR)
 .PHONY: clean all
 
 bin/chroma_to_openqcd : $(SRCDIR)/chroma_to_openqcd.cpp $(DEPDIR)/chroma_to_openqcd.d | $(BINDIR)
@@ -32,3 +37,6 @@ $(BINDIR):
 
 $(DEPDIR):
 	@mkdir $(DEPDIR)
+
+$(OPENQCD_DIR):
+	$(error The openqcd folder does not exist, please link it in. Expected location "$(OPENQCD_DIR)")
