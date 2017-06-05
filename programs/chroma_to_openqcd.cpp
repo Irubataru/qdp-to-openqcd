@@ -1,22 +1,22 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Mon 05 Jun 2017 17:04:39 BST
+ * Modified: Mon 05 Jun 2017 17:30:44 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
 #include "chroma_to_openqcd.hpp"
+
+using namespace fastsum;
 
 const std::string xml_geometry_tag = "/HMC/ProgramInfo/Setgeom";
 const std::string xml_lattice_size_tag = "latt_size";
 
 int main(int argc, char **argv)
 {
-  QDP::QDP_initialize(&argc, &argv);
-  fastsum::QDP_stream_redirect redirect{"/dev/null"};
-  fastsum::Mpi_Wrapper mpi_wrapper{argc, argv};
+  QDP_Instance_Wrapper qdp_instance {argc, argv};
 
-  if (mpi_wrapper.comm_size() > 1 or NPROC != 1) {
+  if (QDP_Instance_Wrapper::MPI::comm_size() > 1 or NPROC != 1) {
     std::cerr << "This program only works in serial" << std::endl;
     return 1;
   }
@@ -31,11 +31,8 @@ int main(int argc, char **argv)
     read_qdp_gauge_field(qdp_gauge_field, in_filename);
   } catch (std::exception &err) {
     std::cerr << err.what() << std::endl;
-    QDP::QDP_finalize();
     return 1;
   }
-
-  QDP::QDP_finalize();
 }
 
 void init_qdp_lattice_geometry()

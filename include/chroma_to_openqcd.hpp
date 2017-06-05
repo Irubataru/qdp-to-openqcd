@@ -1,7 +1,7 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Mon 05 Jun 2017 17:02:09 BST
+ * Modified: Mon 05 Jun 2017 17:27:58 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -11,9 +11,8 @@
 #include <boost/program_options.hpp>
 #include <iostream>
 #include <mpi.h>
-#include <mpi_wrapper.hpp>
 #include <qdp.h>
-#include <qdp_fastsum_utilities.hpp>
+#include <qdp_instance_wrapper.hpp>
 
 extern "C" {
 #include "global.h"

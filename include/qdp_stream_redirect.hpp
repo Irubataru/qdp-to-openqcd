@@ -1,12 +1,12 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Mon 05 Jun 2017 15:02:55 BST
+ * Modified: Mon 05 Jun 2017 17:27:51 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
-#ifndef QDP_FASTSUM_UTILITIES_HPP
-#define QDP_FASTSUM_UTILITIES_HPP
+#ifndef QDP_STREAM_REDIRECT_HPP
+#define QDP_STREAM_REDIRECT_HPP
 
 #include <qdp_stdio.h>
 #include <iostream>
@@ -14,15 +14,15 @@
 
 namespace fastsum {
 
-class QDP_stream_redirect
+class QDP_Stream_Redirect
 {
 public:
-  QDP_stream_redirect(std::string new_cout_filename)
-      : QDP_stream_redirect{new_cout_filename, new_cout_filename}
+  QDP_Stream_Redirect(std::string new_cout_filename)
+      : QDP_Stream_Redirect{new_cout_filename, new_cout_filename}
   {
   }
 
-  QDP_stream_redirect(std::string new_cout_filename,
+  QDP_Stream_Redirect(std::string new_cout_filename,
                       std::string new_cerr_filename)
       : cout_ofs{new_cout_filename}, cerr_ofs{new_cerr_filename}
   {
@@ -38,7 +38,7 @@ public:
     QDP::QDPIO::cerr.init(&cerr_ofs);
   }
 
-  ~QDP_stream_redirect()
+  ~QDP_Stream_Redirect()
   {
     QDP::QDPIO::cout.init(&std::cout);
     QDP::QDPIO::cerr.init(&std::cerr);
@@ -51,4 +51,4 @@ private:
 
 } // namespace fastsum
 
-#endif /* QDP_FASTSUM_UTILITIES_HPP */
+#endif /* QDP_STREAM_REDIRECT_HPP */
