@@ -1,24 +1,23 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Mon 05 Jun 2017 17:53:32 BST
+ * Modified: Tue 06 Jun 2017 13:42:54 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
 #ifndef CHROMA_TO_OPENQCD_HPP
 #define CHROMA_TO_OPENQCD_HPP
 
-#include <boost/program_options.hpp>
-#include <iostream>
-#include <mpi.h>
-#include <qdp.h>
-#include <qdp_instance_wrapper.hpp>
-
 extern "C" {
 #include "global.h"
 }
 
-namespace po = boost::program_options;
+#include <iostream>
+#include <mpi.h>
+#include <qdp.h>
+#include <qdp_instance_wrapper.hpp>
+#include <openqcd_utilities.hpp>
+
 using QDP_Gauge_Field = QDP::multi1d<QDP::LatticeColorMatrixD>;
 
 void init_qdp_lattice_geometry();
