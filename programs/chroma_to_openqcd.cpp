@@ -1,7 +1,7 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Tue 06 Jun 2017 13:37:31 BST
+ * Modified: Tue 06 Jun 2017 17:13:35 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -17,27 +17,47 @@ const std::string xml_lattice_size_tag = "latt_size";
 
 int main(int argc, char **argv)
 {
-  QDP_Instance_Wrapper qdp_instance {argc, argv};
+  QDP_Instance_Wrapper qdp_instance{argc, argv};
 
   if (QDP_Instance_Wrapper::MPI::comm_size() > 1 or NPROC != 1) {
     std::cerr << "This program only works in serial" << std::endl;
     return 1;
   }
 
+  Program_Parameters params;
+
+  try {
+    params = parse_input_arguments(argc, argv);
+  } catch (std::exception &err) {
+    std::cerr << "Error: " << err.what() << "\n" << std::endl;
+    print_help_message();
+    return 1;
+  }
+
   OpenQCD::Initialise();
   init_qdp_lattice_geometry();
-
-  std::string in_filename{"input_config.lime"};
 
   QDP_Gauge_Field qdp_gauge_field(4);
 
   try {
-    read_qdp_gauge_field(qdp_gauge_field, in_filename);
+    read_qdp_gauge_field(qdp_gauge_field, params.input_file);
+  } catch (std::exception &err) {
+    std::cerr << err.what() << std::endl;
+    return 1;
+  }
+
+  OpenQCD_Gauge_Field openqcd_gauge_field{udfld()};
+  
+  try {
+    copy(qdp_gauge_field, openqcd_gauge_field);
+    export_openqcd_config(params.output_file);
   } catch (std::exception &err) {
     std::cerr << err.what() << std::endl;
     return 1;
   }
 }
+
+namespace fastsum {
 
 void init_qdp_lattice_geometry()
 {
@@ -76,3 +96,31 @@ void check_input_geometry(QDP::XMLReader &lime_xml_header)
       (lime_rows[2] != NPROC3 * L3) or (lime_rows[3] != NPROC0 * L0))
     throw std::runtime_error{"openqcd and input file geometry mismatch"};
 }
+
+void print_help_message()
+{
+  std::cout << "Usage:\n"
+            << "chroma_to_openqcd [input_filename] [output_filename]" << std::endl;
+}
+
+Program_Parameters parse_input_arguments(int argc, char **argv)
+{
+  if(argc < 3)
+    throw std::runtime_error{"Not enough arguments"};
+
+  auto result = Program_Parameters {{argv[1]}, {argv[2]}};
+
+  std::ifstream ifs {result.input_file};
+  if (!ifs)
+    throw std::runtime_error {"Cannot open \"" + result.input_file + "\" for reading"};
+  ifs.close();
+
+  std::ofstream ofs {result.output_file};
+  if (!ofs)
+    throw std::runtime_error {"Cannot open \"" + result.output_file + "\" for writing"};
+  ofs.close();
+
+  return result;
+}
+
+} // namespace fastsum

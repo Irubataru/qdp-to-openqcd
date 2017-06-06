@@ -1,7 +1,7 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Tue 06 Jun 2017 13:35:07 BST
+ * Modified: Tue 06 Jun 2017 15:01:07 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  * ----------------------------------------------
  * Description:
@@ -9,7 +9,6 @@
  * Heavily inspired by the Mainz "observer" code.
  */
 
-#include <openqcd_utilities.hpp>
 #include <qdp_converters.hpp>
 
 namespace fastsum {

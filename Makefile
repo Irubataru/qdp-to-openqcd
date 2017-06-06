@@ -4,11 +4,7 @@ QDP_DIR      ?= $(HOME)/.usr/qdp_debug
 OPENQCD_DIR  ?= openqcd
 MPI_DIR      ?= /usr/lib/openmpi
 
-YELLOW_TAG := \033[38;5;03m
-GREEN_TAG  := \033[38;5;02m
-
-
-CXXFLAGS     := -std=c++11 -g -Iinclude -I$(OPENQCD_DIR)/include\
+CXXFLAGS     := -std=c++14 -g -Iinclude -I$(OPENQCD_DIR)/include\
 								-I$(MPI_DIR)/include\
 								$(shell $(QDP_DIR)/bin/qdp++-config --cxxflags)
 
@@ -33,12 +29,13 @@ LIBDEPS  := $(LIBSRCS:$(LIBDIR)/%.cpp=$(OBJDEPDIR)/%.d)
 
 OPENQCD_FILES  := flags/flags flags/lat_parms flags/dfl_parms\
 	                lattice/bcnds lattice/uidx lattice/geometry\
-							  	uflds/uflds\
+							  	uflds/uflds uflds/plaq_sum uflds/udcom\
 									su3fcts/su3prod su3fcts/su3ren su3fcts/cm3x3 su3fcts/random_su3\
 									random/ranlux random/ranlxs random/ranlxd random/gauss\
-									utils/endian utils/mutils utils/utils utils/wspace
+									utils/endian utils/mutils utils/utils utils/wspace\
+									archive/archive
 
-OPENQCD_OBJDIRS := flags lattice uflds su3fcts random utils
+OPENQCD_OBJDIRS := flags lattice uflds su3fcts random utils archive
 OPENQCD_SRCS    := $(OPENQCD_FILES:%=$(OPENQCD_DIR)/modules/%.c)
 OPENQCD_OBJS    := $(OPENQCD_FILES:%=$(OBJDIR)/openqcd/%.o)
 
@@ -50,15 +47,15 @@ bin/chroma_to_openqcd : \
 		$(LIBOBJS) $(OPENQCD_OBJS)\
 		$(DEPDIR)/chroma_to_openqcd.d\
 		| $(BINDIR)
-	@echo "$(YELLOW_TAG)CXX $(GREEN_TAG)$@"
+	@echo "CXX $@"
 	@$(CXX) $(CXXFLAGS) $< $(LIBOBJS) $(OPENQCD_OBJS) -o $@ $(QDP_LIBFLAGS)
 
 $(LIBOBJS): $(OBJDIR)/%.o : $(LIBDIR)/%.cpp $(OBJDEPDIR)/%.d | $(OBJDIR)
-	@echo "$(YELLOW_TAG)CXX $(GREEN_TAG)$@"
+	@echo "CXX $@"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(OPENQCD_OBJS): $(OBJDIR)/openqcd/%.o : $(OPENQCD_DIR)/modules/%.c | $(OPENQCD_OBJDIRS)
-	@echo "$(YELLOW_TAG)CC $(GREEN_TAG)$@"
+	@echo "CC $@"
 	@$(CC) $(CCFLAGS) -c $< -o $@
 
 $(DEPS): $(DEPDIR)/%.d: $(SRCDIR)/%.cpp | $(DEPDIR)

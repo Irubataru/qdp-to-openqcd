@@ -1,7 +1,7 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Tue 06 Jun 2017 13:39:25 BST
+ * Modified: Tue 06 Jun 2017 15:28:46 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -9,14 +9,7 @@
 #define QDP_CONVERTERS_HPP
 
 #include <qdp.h>
-
-extern "C" {
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
-#include "global.h"
-#include "su3.h"
-}
+#include <openqcd_utilities.hpp>
 
 namespace fastsum {
 

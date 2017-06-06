@@ -1,7 +1,7 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Mon 05 Jun 2017 17:32:58 BST
+ * Modified: Tue 06 Jun 2017 17:25:59 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -10,6 +10,7 @@
 
 #include <mpi.h>
 #include <qdp.h>
+#include <memory>
 #include "qdp_stream_redirect.hpp"
 
 namespace fastsum {
@@ -18,9 +19,9 @@ class QDP_Instance_Wrapper
 {
 public:
   QDP_Instance_Wrapper(int argc, char **argv)
-    : stream_redirect_{"/dev/null"}
   {
     QDP::QDP_initialize(&argc, &argv);
+    stream_redirect_.reset(new QDP_Stream_Redirect {"/dev/null"});
 
     if (!MPI::initialized())
       MPI_Init(&argc, &argv);
@@ -67,7 +68,7 @@ public:
   }
 
 private:
-  QDP_Stream_Redirect stream_redirect_;
+  std::unique_ptr<QDP_Stream_Redirect> stream_redirect_;
 };
 
 } // namespace fastsum
