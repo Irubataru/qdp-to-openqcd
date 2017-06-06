@@ -1,7 +1,7 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Mon 05 Jun 2017 17:27:58 BST
+ * Modified: Mon 05 Jun 2017 17:53:32 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -16,7 +16,6 @@
 
 extern "C" {
 #include "global.h"
-#include "su3.h"
 }
 
 namespace po = boost::program_options;
