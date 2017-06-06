@@ -1,9 +1,12 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Mon 05 Jun 2017 17:30:44 BST
+ * Modified: Tue 06 Jun 2017 13:37:31 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
+
+// Needed to define all OpenQCD global arrays
+#define MAIN_PROGRAM
 
 #include "chroma_to_openqcd.hpp"
 
@@ -21,6 +24,7 @@ int main(int argc, char **argv)
     return 1;
   }
 
+  OpenQCD::Initialise();
   init_qdp_lattice_geometry();
 
   std::string in_filename{"input_config.lime"};

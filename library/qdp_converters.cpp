@@ -1,7 +1,7 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Tue 06 Jun 2017 13:15:09 BST
+ * Modified: Tue 06 Jun 2017 13:35:07 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  * ----------------------------------------------
  * Description:
@@ -9,6 +9,7 @@
  * Heavily inspired by the Mainz "observer" code.
  */
 
+#include <openqcd_utilities.hpp>
 #include <qdp_converters.hpp>
 
 namespace fastsum {
@@ -110,10 +111,14 @@ void copy(QDP::ColorMatrixD const &from, su3_dble &to)
 /* Lattice gauge field copy function */
 void copy(QDP_Gauge_Field const &from, OpenQCD_Gauge_Field &to)
 {
+  if (!OpenQCD::Is_Initialised())
+    throw std::runtime_error{
+        "Trying to copy fields without initialising OpenQCD"};
+
   auto qdp_gauge_array = extract_colour_fields(from);
 
-  // It is a bit ugly with all of these loops, but I believe a superindex would
-  // require more calls and has a larger margin of error.
+  // Might be worth doing a superindex instead, but it will require more
+  // function calls and is in general less readable
   for (auto it = 0; it < L0; ++it)
     for (auto ix = 0; ix < L1; ++ix)
       for (auto iy = 0; iy < L2; ++iy)

@@ -1,16 +1,20 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Tue 06 Jun 2017 13:08:47 BST
+ * Modified: Tue 06 Jun 2017 13:39:25 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
 #ifndef QDP_CONVERTERS_HPP
 #define QDP_CONVERTERS_HPP
 
-#include "chroma_to_openqcd.hpp"
+#include <qdp.h>
 
 extern "C" {
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include "global.h"
 #include "su3.h"
 }
 
