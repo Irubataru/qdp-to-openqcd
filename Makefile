@@ -1,11 +1,18 @@
 CXX          ?= g++
+CC           ?= gcc
 QDP_DIR      ?= $(HOME)/.usr/qdp_debug
 OPENQCD_DIR  ?= openqcd
 MPI_DIR      ?= /usr/lib/openmpi
 
+YELLOW_TAG := \033[38;5;03m
+GREEN_TAG  := \033[38;5;02m
+
+
 CXXFLAGS     := -std=c++11 -g -Iinclude -I$(OPENQCD_DIR)/include\
 								-I$(MPI_DIR)/include\
 								$(shell $(QDP_DIR)/bin/qdp++-config --cxxflags)
+
+CCFLAGS      := -g -I$(OPENQCD_DIR)/include -I$(MPI_DIR)/include
 
 QDP_LIBFLAGS := $(shell $(QDP_DIR)/bin/qdp++-config --libs)\
 								$(shell $(QDP_DIR)/bin/qdp++-config --ldflags)
@@ -13,7 +20,7 @@ QDP_LIBFLAGS := $(shell $(QDP_DIR)/bin/qdp++-config --libs)\
 SRCDIR    := programs
 LIBDIR    := library
 BINDIR    := bin
-OBJDIR    := $(LIBDIR)/obj
+OBJDIR    := obj
 DEPDIR    := .dep
 OBJDEPDIR := $(DEPDIR)/obj
 
@@ -24,27 +31,46 @@ LIBSRCS  := $(wildcard $(LIBDIR)/*.cpp)
 LIBOBJS  := $(LIBSRCS:$(LIBDIR)/%.cpp=$(OBJDIR)/%.o)
 LIBDEPS  := $(LIBSRCS:$(LIBDIR)/%.cpp=$(OBJDEPDIR)/%.d)
 
+OPENQCD_FILES  := flags/flags flags/lat_parms flags/dfl_parms\
+	                lattice/bcnds lattice/uidx lattice/geometry\
+							  	uflds/uflds\
+									su3fcts/su3prod su3fcts/su3ren su3fcts/cm3x3 su3fcts/random_su3\
+									random/ranlux random/ranlxs random/ranlxd random/gauss\
+									utils/endian utils/mutils utils/utils utils/wspace
+
+OPENQCD_OBJDIRS := flags lattice uflds su3fcts random utils
+OPENQCD_SRCS    := $(OPENQCD_FILES:%=$(OPENQCD_DIR)/modules/%.c)
+OPENQCD_OBJS    := $(OPENQCD_FILES:%=$(OBJDIR)/openqcd/%.o)
+
 all: $(EXECS) $(OPENQCD_DIR)
 .PHONY: clean all
 
-bin/chroma_to_openqcd : $(SRCDIR)/chroma_to_openqcd.cpp $(LIBOBJS) $(DEPDIR)/chroma_to_openqcd.d | $(BINDIR)
-	@echo CXX $@
-	@$(CXX) $(CXXFLAGS) $< -o $@ $(QDP_LIBFLAGS) -lboost_program_options
+bin/chroma_to_openqcd : \
+		$(SRCDIR)/chroma_to_openqcd.cpp\
+		$(LIBOBJS) $(OPENQCD_OBJS)\
+		$(DEPDIR)/chroma_to_openqcd.d\
+		| $(BINDIR)
+	@echo "$(YELLOW_TAG)CXX $(GREEN_TAG)$@"
+	@$(CXX) $(CXXFLAGS) $< $(LIBOBJS) $(OPENQCD_OBJS) -o $@ $(QDP_LIBFLAGS)
 
-$(OBJDIR)/%.o : $(LIBDIR)/%.cpp $(OBJDEPDIR)/%.d | $(OBJDIR)
-	@echo CXX $@
+$(LIBOBJS): $(OBJDIR)/%.o : $(LIBDIR)/%.cpp $(OBJDEPDIR)/%.d | $(OBJDIR)
+	@echo "$(YELLOW_TAG)CXX $(GREEN_TAG)$@"
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(DEPDIR)/%.d: $(SRCDIR)/%.cpp | $(DEPDIR)
+$(OPENQCD_OBJS): $(OBJDIR)/openqcd/%.o : $(OPENQCD_DIR)/modules/%.c | $(OPENQCD_OBJDIRS)
+	@echo "$(YELLOW_TAG)CC $(GREEN_TAG)$@"
+	@$(CC) $(CCFLAGS) -c $< -o $@
+
+$(DEPS): $(DEPDIR)/%.d: $(SRCDIR)/%.cpp | $(DEPDIR)
 	@$(CXX) $(CXXFLAGS) -MM -MP -MT $(BINDIR)/$(patsubst $(SRCDIR)/%.cpp,%,$<) -MF $@ $<
 
-$(OBJDEPDIR)/%.d: $(LIBDIR)/%.cpp | $(OBJDEPDIR)
+$(LIBDEPS): $(OBJDEPDIR)/%.d: $(LIBDIR)/%.cpp | $(OBJDEPDIR)
 	@$(CXX) $(CXXFLAGS) -MM -MP -MT $(OBJDIR)/$(patsubst $(LIBDIR)/%.cpp,%.o,$<) -MF $@ $<
 
--include $(DEPS)
+-include $(DEPS) $(LIBDEPS)
 
 clean:
-	rm -rf $(BINDIR) $(DEPDIR)
+	rm -rf $(BINDIR) $(DEPDIR) $(OBJDIR)
 
 $(BINDIR):
 	@mkdir -p $(BINDIR)
@@ -57,6 +83,9 @@ $(OBJDEPDIR):
 
 $(OBJDIR):
 	@mkdir -p $(OBJDIR)
+
+$(OPENQCD_OBJDIRS): | $(OBJDIR)
+	@mkdir -p $(OPENQCD_OBJDIRS:%=$(OBJDIR)/openqcd/%)
 
 $(OPENQCD_DIR):
 	$(error The openqcd folder does not exist, please link it in. Expected location "$(OPENQCD_DIR)")
