@@ -1,7 +1,7 @@
 
 /*
  * Created: 06-06-2017
- * Modified: Tue 06 Jun 2017 17:03:33 BST
+ * Modified: Wed 07 Jun 2017 16:46:31 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -14,6 +14,10 @@ extern "C" {
 
 namespace fastsum {
 
+/* Exports the current configuration stored in udfld() to a file named
+ * "filename". See the OpenQCD documentation to see which parameters this
+ * includes.
+ */
 void export_openqcd_config(std::string filename)
 {
   if (!check_bc(0.0) or chs_ubnd(1))

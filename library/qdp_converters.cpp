@@ -1,7 +1,7 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Wed 07 Jun 2017 16:28:22 BST
+ * Modified: Wed 07 Jun 2017 19:22:37 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  * ----------------------------------------------
  * Description:
@@ -72,7 +72,8 @@ bool is_odd_site(int t, int x, int y, int z)
 
 /* Returns the index of the gauge link at pos (t,x,y,z) in dir mu in the openqcd
  * storage format. It assumes that the program runs in serial and that all
- * openqcd geometry structures exist.
+ * openqcd geometry structures exist. The mu index is assumed to be of the
+ * (x,y,z,t) order of QDP and must therefore be converted.
  */
 int openqcd_gauge_index(int t, int x, int y, int z, int mu)
 {

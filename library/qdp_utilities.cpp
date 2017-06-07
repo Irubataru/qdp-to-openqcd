@@ -1,7 +1,7 @@
 
 /*
  * Created: 07-06-2017
- * Modified: Wed 07 Jun 2017 16:33:26 BST
+ * Modified: Wed 07 Jun 2017 19:23:16 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -9,6 +9,7 @@
 
 namespace fastsum {
 
+/* Computes the average plaquette of the QDP gauge config given. */
 double average_plaquette(QDP_Gauge_Field const &gauge_field)
 {
   QDP::Double plaq_sum{0.};
