@@ -1,7 +1,7 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Tue 06 Jun 2017 17:59:20 BST
+ * Modified: Wed 07 Jun 2017 16:28:22 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  * ----------------------------------------------
  * Description:
@@ -77,11 +77,12 @@ bool is_odd_site(int t, int x, int y, int z)
 int openqcd_gauge_index(int t, int x, int y, int z, int mu)
 {
   auto site_index = openqcd_site_index(t, x, y, z);
+  int omu = mu + 1 - 4*(mu == 3);
 
   if (is_odd_site(t, x, y, z))
-    return 8 * (site_index - VOLUME / 2) + 2 * mu;
+    return 8 * (site_index - VOLUME / 2) + 2 * omu;
   else
-    return 8 * (iup[site_index][mu] - VOLUME / 2) + 2 * mu + 1;
+    return 8 * (iup[site_index][omu] - VOLUME / 2) + 2 * omu + 1;
 }
 
 }
