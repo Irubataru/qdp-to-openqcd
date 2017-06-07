@@ -1,12 +1,12 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Tue 06 Jun 2017 17:12:13 BST
+ * Modified: Wed 07 Jun 2017 14:50:30 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
-#ifndef CHROMA_TO_OPENQCD_HPP
-#define CHROMA_TO_OPENQCD_HPP
+#ifndef QDP_TO_OPENQCD_HPP
+#define QDP_TO_OPENQCD_HPP
 
 #include <openqcd_utilities.hpp>
 
@@ -37,4 +37,4 @@ Program_Parameters parse_input_arguments(int arc, char **argv);
 
 } // namespace fastsum
 
-#endif /* CHROMA_TO_OPENQCD_HPP */
+#endif /* QDP_TO_OPENQCD_HPP */

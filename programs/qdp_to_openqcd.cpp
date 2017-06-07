@@ -1,14 +1,15 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Tue 06 Jun 2017 17:13:35 BST
+ * Modified: Wed 07 Jun 2017 14:50:46 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
 // Needed to define all OpenQCD global arrays
 #define MAIN_PROGRAM
 
-#include "chroma_to_openqcd.hpp"
+#include "qdp_to_openqcd.hpp"
+#include <iomanip>
 
 using namespace fastsum;
 
@@ -55,6 +56,9 @@ int main(int argc, char **argv)
     std::cerr << err.what() << std::endl;
     return 1;
   }
+
+  std::cout << "OpenQCD config exported, average plaquette: "
+            << std::setprecision(16) << plaq_wsum_dble(0) << std::endl;
 }
 
 namespace fastsum {
@@ -100,7 +104,7 @@ void check_input_geometry(QDP::XMLReader &lime_xml_header)
 void print_help_message()
 {
   std::cout << "Usage:\n"
-            << "chroma_to_openqcd [input_filename] [output_filename]" << std::endl;
+            << "qdp_to_openqcd [input_filename] [output_filename]" << std::endl;
 }
 
 Program_Parameters parse_input_arguments(int argc, char **argv)

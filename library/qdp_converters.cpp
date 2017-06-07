@@ -1,7 +1,7 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Tue 06 Jun 2017 15:01:07 BST
+ * Modified: Tue 06 Jun 2017 17:59:20 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  * ----------------------------------------------
  * Description:
@@ -76,17 +76,14 @@ bool is_odd_site(int t, int x, int y, int z)
  */
 int openqcd_gauge_index(int t, int x, int y, int z, int mu)
 {
-  if (is_odd_site(t, x, y, z)) {
-    return 8 * (openqcd_site_index(t, x, y, z) - VOLUME / 2) + 2 * mu;
-  } else {
-    auto next_odd_site = iup[openqcd_site_index(t, x, y, z)][mu];
+  auto site_index = openqcd_site_index(t, x, y, z);
 
-    if (next_odd_site < VOLUME)
-      return 8 * (next_odd_site - VOLUME / 2) + 2 * mu + 1;
-    else
-      return 8 * (map[next_odd_site] - VOLUME / 2) + 2 * mu + 1;
-  }
+  if (is_odd_site(t, x, y, z))
+    return 8 * (site_index - VOLUME / 2) + 2 * mu;
+  else
+    return 8 * (iup[site_index][mu] - VOLUME / 2) + 2 * mu + 1;
 }
+
 }
 
 /* Single colour matrix copy function */

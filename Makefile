@@ -42,10 +42,10 @@ OPENQCD_OBJS    := $(OPENQCD_FILES:%=$(OBJDIR)/openqcd/%.o)
 all: $(EXECS) $(OPENQCD_DIR)
 .PHONY: clean all
 
-bin/chroma_to_openqcd : \
-		$(SRCDIR)/chroma_to_openqcd.cpp\
+bin/qdp_to_openqcd : \
+		$(SRCDIR)/qdp_to_openqcd.cpp\
 		$(LIBOBJS) $(OPENQCD_OBJS)\
-		$(DEPDIR)/chroma_to_openqcd.d\
+		$(DEPDIR)/qdp_to_openqcd.d\
 		| $(BINDIR)
 	@echo "CXX $@"
 	@$(CXX) $(CXXFLAGS) $< $(LIBOBJS) $(OPENQCD_OBJS) -o $@ $(QDP_LIBFLAGS)
