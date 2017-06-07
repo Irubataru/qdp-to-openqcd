@@ -1,7 +1,7 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Wed 07 Jun 2017 14:50:30 BST
+ * Modified: Wed 07 Jun 2017 16:22:59 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -20,6 +20,8 @@ extern "C" {
 #include <qdp_converters.hpp>
 #include <qdp_instance_wrapper.hpp>
 #include <openqcd_archive.hpp>
+#include <openqcd_utilities.hpp>
+#include <qdp_utilities.hpp>
 
 namespace fastsum {
 

@@ -1,7 +1,7 @@
 
 /*
  * Created: 02-06-2017
- * Modified: Wed 07 Jun 2017 14:50:46 BST
+ * Modified: Wed 07 Jun 2017 16:34:22 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -47,8 +47,12 @@ int main(int argc, char **argv)
     return 1;
   }
 
+  std::cout << "QDP config imported, average plaquette:     "
+            << std::setprecision(16) << average_plaquette(qdp_gauge_field)
+            << std::endl;
+
   OpenQCD_Gauge_Field openqcd_gauge_field{udfld()};
-  
+
   try {
     copy(qdp_gauge_field, openqcd_gauge_field);
     export_openqcd_config(params.output_file);
@@ -58,7 +62,8 @@ int main(int argc, char **argv)
   }
 
   std::cout << "OpenQCD config exported, average plaquette: "
-            << std::setprecision(16) << plaq_wsum_dble(0) << std::endl;
+            << std::setprecision(16) << average_plaquette(openqcd_gauge_field)
+            << std::endl;
 }
 
 namespace fastsum {
@@ -109,19 +114,21 @@ void print_help_message()
 
 Program_Parameters parse_input_arguments(int argc, char **argv)
 {
-  if(argc < 3)
+  if (argc < 3)
     throw std::runtime_error{"Not enough arguments"};
 
-  auto result = Program_Parameters {{argv[1]}, {argv[2]}};
+  auto result = Program_Parameters{{argv[1]}, {argv[2]}};
 
-  std::ifstream ifs {result.input_file};
+  std::ifstream ifs{result.input_file};
   if (!ifs)
-    throw std::runtime_error {"Cannot open \"" + result.input_file + "\" for reading"};
+    throw std::runtime_error{"Cannot open \"" + result.input_file +
+                             "\" for reading"};
   ifs.close();
 
-  std::ofstream ofs {result.output_file};
+  std::ofstream ofs{result.output_file};
   if (!ofs)
-    throw std::runtime_error {"Cannot open \"" + result.output_file + "\" for writing"};
+    throw std::runtime_error{"Cannot open \"" + result.output_file +
+                             "\" for writing"};
   ofs.close();
 
   return result;

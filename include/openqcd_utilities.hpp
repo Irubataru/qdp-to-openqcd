@@ -1,7 +1,7 @@
 
 /*
  * Created: 06-06-2017
- * Modified: Tue 06 Jun 2017 13:41:20 BST
+ * Modified: Wed 07 Jun 2017 16:18:49 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -17,6 +17,8 @@ extern "C" {
 #include "flags.h"
 #include "lattice.h"
 }
+
+#include <types.hpp>
 
 namespace fastsum {
 
@@ -34,6 +36,8 @@ inline bool Is_Initialised()
 }
 
 } // namespace OpenQCD 
+
+double average_plaquette(OpenQCD_Gauge_Field const &);
 
 } // namespace fastsum 
 

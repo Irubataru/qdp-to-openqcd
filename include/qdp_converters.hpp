@@ -1,7 +1,7 @@
 
 /*
  * Created: 05-06-2017
- * Modified: Tue 06 Jun 2017 15:28:46 BST
+ * Modified: Wed 07 Jun 2017 16:07:44 BST
  * Author: Jonas R. Glesaaen (jonas@glesaaen.com)
  */
 
@@ -9,12 +9,10 @@
 #define QDP_CONVERTERS_HPP
 
 #include <qdp.h>
+#include <types.hpp>
 #include <openqcd_utilities.hpp>
 
 namespace fastsum {
-
-using QDP_Gauge_Field = QDP::multi1d<QDP::LatticeColorMatrixD>;
-using OpenQCD_Gauge_Field = su3_dble*;
 
 void copy(QDP::ColorMatrixD const&from, su3_dble &to);
 void copy(QDP_Gauge_Field const& from, OpenQCD_Gauge_Field &to);
